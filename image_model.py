@@ -17,13 +17,14 @@ emotion_classifier = pipeline(
 
 def analyze_image(image):
 
-    # -------- OBJECT CLASSIFICATION --------
+    #  OBJECT CLASSIFICATION 
     object_results = object_classifier(image)
 
-    # -------- EMOTION DETECTION --------
+    # EMOTION DETECTION 
     emotion_results = emotion_classifier(image)
 
     dominant_emotion = emotion_results[0]["label"]
     emotion_scores = {r["label"]: r["score"] for r in emotion_results}
 
     return object_results, dominant_emotion, emotion_scores
+
