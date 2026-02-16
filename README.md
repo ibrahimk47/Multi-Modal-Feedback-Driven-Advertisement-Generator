@@ -97,13 +97,7 @@ multi-modal-advertisement-ai/
 │
 ├── requirements.txt
 ├── README.md
-├── .gitignore
-│
-├── assets/
-│ └── demo_screenshot.png
-│
-└── docs/
-└── architecture.png
+
 
 ---
 
@@ -207,5 +201,6 @@ LinkedIn:
 ⭐ If You Like This Project
 
 Give it a star on GitHub.
+
 
 ---
