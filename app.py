@@ -8,17 +8,16 @@ from image_model import analyze_image
 from utils import clean_text
 from PIL import Image
 
-# ---------------------------------------------------
 # PAGE CONFIG
-# ---------------------------------------------------
+
 st.set_page_config(
     page_title="Multi-Modal Feedback-Driven Advertisement Generation",
     layout="wide"
 )
 
-# ---------------------------------------------------
-# CLEAN UI STYLE
-# ---------------------------------------------------
+
+# UI STYLE
+
 st.markdown("""
 <style>
 body {
@@ -34,15 +33,14 @@ body {
 </style>
 """, unsafe_allow_html=True)
 
-# ---------------------------------------------------
 # SIDEBAR NAVIGATION
-# ---------------------------------------------------
+
 st.sidebar.title("Dashboard")
 page = st.sidebar.radio("Navigation", ["Overview", "Text Analysis", "Image Analysis"])
 
-# ===================================================
+
 # OVERVIEW PAGE
-# ===================================================
+
 if page == "Overview":
 
     st.title("Multi-Modal Feedback-Driven Advertisement Generation using NLP, Sentiment & Emotion Analysis")
@@ -74,9 +72,9 @@ if page == "Overview":
     • Multi-Modal Advertisement Strategy  
     """)
 
-# ===================================================
+
 # TEXT ANALYSIS PAGE
-# ===================================================
+
 elif page == "Text Analysis":
 
     st.title("Text-Based Advertisement Suggestion")
@@ -99,7 +97,7 @@ elif page == "Text Analysis":
 
             col1, col2 = st.columns(2)
 
-            # -------- Analysis Section --------
+            # Analysis Section 
             with col1:
                 st.subheader("Analysis Results")
                 st.write(f"Sentiment: {sentiment}")
@@ -115,7 +113,7 @@ elif page == "Text Analysis":
                 ))
                 st.plotly_chart(fig_gauge, use_container_width=True)
 
-            # -------- Advertisement Section --------
+            # Advertisement Section
             with col2:
                 st.subheader("🎯 Advertisement Suggestion")
                 st.success(ad)
@@ -123,9 +121,9 @@ elif page == "Text Analysis":
         else:
             st.warning("Please enter feedback.")
 
-# ===================================================
+
 # IMAGE ANALYSIS PAGE
-# ===================================================
+
 elif page == "Image Analysis":
 
     st.title("Image-Based Advertisement Suggestion")
@@ -144,13 +142,13 @@ elif page == "Image Analysis":
 
             col1, col2 = st.columns(2)
 
-            # -------- Image Analysis --------
+            #  Image Analysis 
             with col1:
                 st.subheader("Image Analysis Results")
                 st.write(f"Detected Object: {detected_object}")
                 st.write(f"Dominant Emotion: {dominant_emotion}")
 
-            # -------- Advertisement --------
+            #  Advertisement 
             with col2:
                 ad = generate_ad(
                     text_sentiment="NEUTRAL",
@@ -162,3 +160,4 @@ elif page == "Image Analysis":
 
                 st.subheader("🎯 Advertisement Suggestion")
                 st.success(ad)
+
