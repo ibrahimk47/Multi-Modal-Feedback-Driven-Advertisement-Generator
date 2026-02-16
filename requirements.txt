@@ -1,32 +1,10 @@
-streamlit>=1.30.0
-transformers>=4.35.0
-torch>=2.0.0
-matplotlib>=3.7.0
-plotly>=5.15.0
-pillow>=9.5.0
-numpy>=1.24.0
-scikit-learn>=1.3.0
-opencv-python>=4.8.0
-nltk>=3.8.1
-
-✅ Why These Libraries Are Included
-
-streamlit → UI dashboard
-
-transformers → Sentiment & emotion models
-
-torch → Backend deep learning engine
-
-matplotlib → Graph plotting
-
-plotly → Emotion gauge meter
-
-pillow → Image processing
-
-numpy → Numerical operations
-
-scikit-learn → ML utilities (if used)
-
-opencv-python → Image handling (face detection etc.)
-
-nltk → Text preprocessing
+streamlit
+transformers
+torch
+matplotlib
+plotly
+pillow
+numpy
+scikit-learn
+opencv-python
+nltk
