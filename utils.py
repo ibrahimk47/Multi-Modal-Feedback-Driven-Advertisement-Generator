@@ -2,12 +2,23 @@ import re
 import nltk
 
 # -------------------------------------------------
-# Safe NLTK Setup for Local + Streamlit Cloud
+# Safe NLTK Setup for Streamlit Cloud (Python 3.13)
 # -------------------------------------------------
-try:
-    nltk.data.find("tokenizers/punkt")
-except LookupError:
-    nltk.download("punkt", quiet=True)
+
+def download_nltk_resources():
+    try:
+        nltk.data.find("tokenizers/punkt")
+    except LookupError:
+        nltk.download("punkt", quiet=True)
+
+    try:
+        nltk.data.find("tokenizers/punkt_tab")
+    except LookupError:
+        nltk.download("punkt_tab", quiet=True)
+
+# Download resources at startup
+download_nltk_resources()
+
 
 # -------------------------------------------------
 # Text Cleaning Function
@@ -20,20 +31,13 @@ def clean_text(text):
     if not text:
         return ""
 
-    # Convert to lowercase
     text = text.lower()
-
-    # Remove special characters and numbers
     text = re.sub(r"[^a-zA-Z\s]", "", text)
 
-    # Tokenize safely
     try:
         tokens = nltk.word_tokenize(text)
     except LookupError:
-        nltk.download("punkt", quiet=True)
+        download_nltk_resources()
         tokens = nltk.word_tokenize(text)
 
-    # Join tokens back
-    cleaned_text = " ".join(tokens)
-
-    return cleaned_text
+    return " ".join(tokens)
