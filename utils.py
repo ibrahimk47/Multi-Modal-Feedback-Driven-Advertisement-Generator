@@ -1,9 +1,8 @@
 import re
 import nltk
 
-# -------------------------------------------------
-# Safe NLTK Setup for Streamlit Cloud (Python 3.13)
-# -------------------------------------------------
+
+# NLTK Setup for Streamlit Cloud (Python 3.13)
 
 def download_nltk_resources():
     try:
@@ -20,9 +19,9 @@ def download_nltk_resources():
 download_nltk_resources()
 
 
-# -------------------------------------------------
+
 # Text Cleaning Function
-# -------------------------------------------------
+
 def clean_text(text):
     """
     Cleans and preprocesses text input for NLP models.
@@ -41,3 +40,4 @@ def clean_text(text):
         tokens = nltk.word_tokenize(text)
 
     return " ".join(tokens)
+
