@@ -1,11 +1,10 @@
 streamlit
-transformers
+ultralytics
 torch
-matplotlib
-plotly
+transformers
 pillow
 numpy
-scikit-learn
+matplotlib
+plotly
 nltk
-
-
+scikit-learn
