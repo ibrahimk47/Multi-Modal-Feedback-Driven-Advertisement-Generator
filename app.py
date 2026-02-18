@@ -8,17 +8,17 @@ from emotion_model import detect_emotion
 from image_model import analyze_image
 from ad_generator import generate_ad
 
-# --------------------------------------------------
+
 # PAGE CONFIG
-# --------------------------------------------------
+
 st.set_page_config(
     page_title="Multi-Modal AI Advertisement Engine",
     layout="wide"
 )
 
-# --------------------------------------------------
+
 # PREMIUM STYLES
-# --------------------------------------------------
+
 st.markdown("""
 <style>
 
@@ -75,17 +75,17 @@ footer {
 </style>
 """, unsafe_allow_html=True)
 
-# --------------------------------------------------
+
 # HEADER
-# --------------------------------------------------
+
 st.markdown('<div class="main-title">Multi-Modal AI Advertisement Engine</div>', unsafe_allow_html=True)
 st.markdown('<div class="sub-title">AI-Powered Text & Image Marketing Intelligence</div>', unsafe_allow_html=True)
 
 page = st.sidebar.radio("Navigation", ["Overview", "Text Analysis", "Image Analysis"])
 
-# ==================================================
+
 # OVERVIEW DASHBOARD
-# ==================================================
+
 if page == "Overview":
 
     col1, col2, col3 = st.columns(3)
@@ -113,9 +113,9 @@ if page == "Overview":
 
     st.markdown('</div>', unsafe_allow_html=True)
 
-# ==================================================
+
 # TEXT ANALYSIS
-# ==================================================
+
 elif page == "Text Analysis":
 
     st.markdown('<div class="card">', unsafe_allow_html=True)
@@ -174,9 +174,9 @@ elif page == "Text Analysis":
 
     st.markdown('</div>', unsafe_allow_html=True)
 
-# ==================================================
+
 # IMAGE ANALYSIS
-# ==================================================
+
 elif page == "Image Analysis":
 
     st.markdown('<div class="card">', unsafe_allow_html=True)
@@ -247,11 +247,12 @@ elif page == "Image Analysis":
 
     st.markdown('</div>', unsafe_allow_html=True)
 
-# --------------------------------------------------
+
 # FOOTER
-# --------------------------------------------------
+
 st.markdown("""
 <footer>
 Built with AI | Multi-Modal Advertisement System
 </footer>
 """, unsafe_allow_html=True)
+
