@@ -8,6 +8,13 @@ import numpy as np
 # ------------------------------
 yolo_model = YOLO("yolov8n.pt")  # lightweight version
 
+classification_model = pipeline(
+    "image-classification",
+    model="google/vit-base-patch16-224",
+    top_k=3
+)
+
+
 # ------------------------------
 # Emotion Model
 # ------------------------------
@@ -18,6 +25,15 @@ emotion_classifier = pipeline(
 )
 
 def analyze_image(image):
+    classification_results = classification_model(image)
+
+for r in classification_results:
+    if r["score"] > 0.2:
+        object_results.append({
+            "label": r["label"],
+            "score": r["score"]
+        })
+
 
     # Convert PIL to numpy
     image_np = np.array(image)
@@ -61,3 +77,4 @@ def analyze_image(image):
         emotion_scores = {}
 
     return object_results, dominant_emotion, emotion_scores
+
