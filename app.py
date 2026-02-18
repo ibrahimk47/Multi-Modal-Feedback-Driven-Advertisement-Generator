@@ -142,19 +142,16 @@ elif page == "Image Analysis":
 
             # ---------------- IMAGE ANALYSIS ----------------
             with col1:
-                st.subheader("Image Analysis Results")
+    st.subheader("Detected Objects")
 
-                # Show ALL detected objects
-                st.write("Detected Objects:")
-                detected_objects = []
+    if object_results:
+        for obj in object_results:
+            st.write(f"- {obj['label']} ({obj['score']:.2f})")
+    else:
+        st.write("No objects detected.")
 
-                for obj in object_results:
-                    label = obj["label"]
-                    score = obj["score"]
-                    detected_objects.append(label)
-                    st.write(f"- {label} ({score:.2f})")
+    st.write(f"Dominant Emotion: {dominant_emotion}")
 
-                st.write(f"Dominant Emotion: {dominant_emotion}")
 
             # ---------------- ADVERTISEMENT ----------------
             with col2:
@@ -172,4 +169,5 @@ elif page == "Image Analysis":
 
                 st.subheader("🎯 Advertisement Suggestion")
                 st.success(ad)
+
 
