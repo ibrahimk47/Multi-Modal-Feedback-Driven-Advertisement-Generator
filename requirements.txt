@@ -6,5 +6,5 @@ plotly
 pillow
 numpy
 scikit-learn
-opencv-python
 nltk
+
