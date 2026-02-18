@@ -123,7 +123,6 @@ elif page == "Text Analysis":
 
 
 # IMAGE ANALYSIS PAGE
-
 elif page == "Image Analysis":
 
     st.title("Image-Based Advertisement Suggestion")
@@ -138,24 +137,37 @@ elif page == "Image Analysis":
         if st.button("Analyze Image"):
 
             object_results, dominant_emotion, emotion_scores = analyze_image(image)
-            detected_object = object_results[0]["label"]
 
             col1, col2 = st.columns(2)
 
-            #  Image Analysis 
+            # ---------------- IMAGE ANALYSIS ----------------
             with col1:
                 st.subheader("Image Analysis Results")
-                st.write(f"Detected Object: {detected_object}")
+
+                # Show ALL detected objects
+                st.write("Detected Objects:")
+                detected_objects = []
+
+                for obj in object_results:
+                    label = obj["label"]
+                    score = obj["score"]
+                    detected_objects.append(label)
+                    st.write(f"- {label} ({score:.2f})")
+
                 st.write(f"Dominant Emotion: {dominant_emotion}")
 
-            #  Advertisement 
+            # ---------------- ADVERTISEMENT ----------------
             with col2:
+
+                # Join multiple objects into a single string
+                detected_object_string = ", ".join(detected_objects)
+
                 ad = generate_ad(
                     text_sentiment="NEUTRAL",
                     text_emotion=dominant_emotion,
                     user_feedback="Visual Interaction",
                     image_emotion=dominant_emotion,
-                    detected_object=detected_object
+                    detected_object=detected_object_string
                 )
 
                 st.subheader("🎯 Advertisement Suggestion")
