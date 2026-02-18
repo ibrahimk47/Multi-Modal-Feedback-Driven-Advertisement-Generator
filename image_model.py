@@ -16,29 +16,29 @@ emotion_classifier = pipeline(
 
 def analyze_image(image):
 
-    # ---------------- OBJECT PREDICTION ----------------
+    # Get top 5 predictions
     object_results = object_classifier(image)
 
-    # Filter low-confidence predictions
-    object_results = [
-        r for r in object_results if r["score"] > 0.2
-    ]
+    # Keep top 5 confidently predicted labels
+    object_results = sorted(object_results, key=lambda x: x["score"], reverse=True)[:5]
 
-    if not object_results:
-        object_results = object_classifier(image)[:3]
+    # Clean labels
+    cleaned_objects = []
+    for r in object_results:
+        label = r["label"]
+        score = r["score"]
+        if score > 0.1:  # lower threshold to allow multiple objects
+            cleaned_objects.append({
+                "label": label,
+                "score": score
+            })
 
-    # ---------------- EMOTION PREDICTION ----------------
+    # Emotion Detection
     emotion_results = emotion_classifier(image)
 
-    emotion_results = [
-        r for r in emotion_results if r["score"] > 0.2
-    ]
+    emotion_results = sorted(emotion_results, key=lambda x: x["score"], reverse=True)
 
-    if emotion_results:
-        dominant_emotion = emotion_results[0]["label"]
-        emotion_scores = {r["label"]: r["score"] for r in emotion_results}
-    else:
-        dominant_emotion = "Neutral"
-        emotion_scores = {}
+    dominant_emotion = emotion_results[0]["label"]
+    emotion_scores = {r["label"]: r["score"] for r in emotion_results}
 
-    return object_results, dominant_emotion, emotion_scores
+    return cleaned_objects, dominant_emotion, emotion_scores
