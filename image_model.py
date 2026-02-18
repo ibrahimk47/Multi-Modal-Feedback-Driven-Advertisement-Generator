@@ -1,67 +1,46 @@
-import os
-import numpy as np
-from ultralytics import YOLO
 from transformers import pipeline
-from huggingface_hub import login
+import numpy as np
 
-# ------------------------------------------------
-# OPTIONAL: HuggingFace Auth (for faster download)
-# ------------------------------------------------
-hf_token = os.getenv("HF_TOKEN")
-if hf_token:
-    login(token=hf_token)
+# --------------------------------------------
+# Lightweight Image Classification Model
+# --------------------------------------------
+object_classifier = pipeline(
+    "image-classification",
+    model="google/vit-base-patch16-224",
+    top_k=5
+)
 
-# ------------------------------------------------
-# Global Model Variables (Lazy Loading)
-# ------------------------------------------------
-yolo_model = None
-emotion_model = None
+# --------------------------------------------
+# Lightweight Emotion Model
+# --------------------------------------------
+emotion_model = pipeline(
+    "image-classification",
+    model="dima806/facial_emotions_image_detection",
+    top_k=3
+)
 
-# ------------------------------------------------
-# Load Models Only When Needed
-# ------------------------------------------------
-def load_models():
-    global yolo_model, emotion_model
-
-    if yolo_model is None:
-        yolo_model = YOLO("yolov8n.pt")  # lightweight nano model
-
-    if emotion_model is None:
-        emotion_model = pipeline(
-            "image-classification",
-            model="dima806/facial_emotions_image_detection",
-            top_k=3
-        )
-
-# ------------------------------------------------
-# Main Image Analysis Function
-# ------------------------------------------------
+# --------------------------------------------
+# Image Analysis Function
+# --------------------------------------------
 def analyze_image(image):
-
-    load_models()
-
-    image_np = np.array(image)
 
     detected_objects = []
 
-    # ---------------- YOLO OBJECT DETECTION ----------------
+    # -------- OBJECT CLASSIFICATION --------
     try:
-        results = yolo_model(image_np)
+        results = object_classifier(image)
 
         for r in results:
-            for box in r.boxes:
-                label = yolo_model.names[int(box.cls[0])]
-                confidence = float(box.conf[0])
+            if r["score"] > 0.15:  # Lower threshold for multiple outputs
+                detected_objects.append({
+                    "label": r["label"],
+                    "score": r["score"]
+                })
 
-                if confidence > 0.4:
-                    detected_objects.append({
-                        "label": label,
-                        "score": confidence
-                    })
     except Exception as e:
-        print("YOLO error:", e)
+        print("Object classification error:", e)
 
-    # Remove duplicate labels
+    # Remove duplicates
     unique = {}
     for obj in detected_objects:
         if obj["label"] not in unique:
@@ -72,16 +51,14 @@ def analyze_image(image):
         for k, v in unique.items()
     ]
 
-    # ---------------- EMOTION DETECTION ----------------
+    # -------- EMOTION DETECTION --------
     try:
         emotion_results = emotion_model(image)
         dominant_emotion = emotion_results[0]["label"]
         emotion_scores = {r["label"]: r["score"] for r in emotion_results}
     except Exception as e:
         print("Emotion error:", e)
-        dominant_emotion = "Not Detected"
+        dominant_emotion = "Neutral"
         emotion_scores = {}
 
     return object_results, dominant_emotion, emotion_scores
-
-
