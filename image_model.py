@@ -1,13 +1,16 @@
+from ultralytics import YOLO
 from transformers import pipeline
+from PIL import Image
+import numpy as np
 
-# Lightweight Image Classification Model
-object_classifier = pipeline(
-    "image-classification",
-    model="google/vit-base-patch16-224",
-    top_k=5
-)
+# ------------------------------
+# YOLOv8 Object Detection Model
+# ------------------------------
+yolo_model = YOLO("yolov8n.pt")  # lightweight version
 
-# Facial Emotion Model
+# ------------------------------
+# Emotion Model
+# ------------------------------
 emotion_classifier = pipeline(
     "image-classification",
     model="dima806/facial_emotions_image_detection",
@@ -16,29 +19,45 @@ emotion_classifier = pipeline(
 
 def analyze_image(image):
 
-    # Get top 5 predictions
-    object_results = object_classifier(image)
+    # Convert PIL to numpy
+    image_np = np.array(image)
 
-    # Keep top 5 confidently predicted labels
-    object_results = sorted(object_results, key=lambda x: x["score"], reverse=True)[:5]
+    # ---------------- OBJECT DETECTION ----------------
+    results = yolo_model(image_np)
 
-    # Clean labels
-    cleaned_objects = []
-    for r in object_results:
-        label = r["label"]
-        score = r["score"]
-        if score > 0.1:  # lower threshold to allow multiple objects
-            cleaned_objects.append({
-                "label": label,
-                "score": score
-            })
+    detected_objects = []
 
-    # Emotion Detection
-    emotion_results = emotion_classifier(image)
+    for r in results:
+        boxes = r.boxes
+        for box in boxes:
+            cls_id = int(box.cls[0])
+            label = yolo_model.names[cls_id]
+            confidence = float(box.conf[0])
 
-    emotion_results = sorted(emotion_results, key=lambda x: x["score"], reverse=True)
+            if confidence > 0.4:
+                detected_objects.append({
+                    "label": label,
+                    "score": confidence
+                })
 
-    dominant_emotion = emotion_results[0]["label"]
-    emotion_scores = {r["label"]: r["score"] for r in emotion_results}
+    # Remove duplicates
+    unique_objects = {}
+    for obj in detected_objects:
+        if obj["label"] not in unique_objects:
+            unique_objects[obj["label"]] = obj["score"]
 
-    return cleaned_objects, dominant_emotion, emotion_scores
+    object_results = [
+        {"label": k, "score": v}
+        for k, v in unique_objects.items()
+    ]
+
+    # ---------------- EMOTION DETECTION ----------------
+    try:
+        emotion_results = emotion_classifier(image)
+        dominant_emotion = emotion_results[0]["label"]
+        emotion_scores = {r["label"]: r["score"] for r in emotion_results}
+    except:
+        dominant_emotion = "Not Detected"
+        emotion_scores = {}
+
+    return object_results, dominant_emotion, emotion_scores
