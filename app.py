@@ -122,6 +122,7 @@ elif page == "Text Analysis":
             st.warning("Please enter feedback.")
 
 
+
 # IMAGE ANALYSIS PAGE
 elif page == "Image Analysis":
 
@@ -140,24 +141,24 @@ elif page == "Image Analysis":
 
             col1, col2 = st.columns(2)
 
-            # ---------------- IMAGE ANALYSIS ----------------
+            # ---------------- IMAGE RESULTS ----------------
             with col1:
-    st.subheader("Detected Objects")
+                st.subheader("Detected Objects")
 
-    if object_results:
-        for obj in object_results:
-            st.write(f"- {obj['label']} ({obj['score']:.2f})")
-    else:
-        st.write("No objects detected.")
+                if object_results:
+                    for obj in object_results:
+                        st.write(f"- {obj['label']} ({obj['score']:.2f})")
+                else:
+                    st.write("No objects detected.")
 
-    st.write(f"Dominant Emotion: {dominant_emotion}")
-
+                st.write(f"Dominant Emotion: {dominant_emotion}")
 
             # ---------------- ADVERTISEMENT ----------------
             with col2:
 
-                # Join multiple objects into a single string
-                detected_object_string = ", ".join(detected_objects)
+                detected_object_string = ", ".join(
+                    [obj["label"] for obj in object_results]
+                )
 
                 ad = generate_ad(
                     text_sentiment="NEUTRAL",
@@ -169,5 +170,6 @@ elif page == "Image Analysis":
 
                 st.subheader("🎯 Advertisement Suggestion")
                 st.success(ad)
+
 
 
